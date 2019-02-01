@@ -1,6 +1,4 @@
-import requests
-import json
-import os
+import requests, json , os
 
 saral_url=("http://saral.navgurukul.org/api/courses")
 def request(url,f_write):
@@ -9,7 +7,6 @@ def request(url,f_write):
 		file.write(response.content)
 	return response.json()
 
-course_id_list=[]
 
 def read_file(f_read):
 	with open(f'{f_read}',"r") as file:
@@ -17,7 +14,9 @@ def read_file(f_read):
 		data_load=json.loads(data_read)
 	return(data_load)
 
+course_id_list=[]
 def saral_courses():
+	print ("\n\n************************  WELCOME  TO  SARAL  *************************************\n\n")
 	data_load=read_file("courses.json")
 	available_courses=data_load['availableCourses']
 	for index in range(len(available_courses)):
@@ -27,8 +26,13 @@ def saral_courses():
 		print(index+1,courses_id,course_name)
 		course_id_list.append(courses_id)
 
+def space():
+  print ("\n\n------------------------------------------------------------------------------------------\n\n")
+
 def select_course():
-	user_input=int(input("\n\nselect your course list number:- "))
+	space()
+	print("\nChoose the Course number which you want to learn:- \n\n")
+	user_input=int(input("Your answer : "))
 	select_id=course_id_list[user_input-1]
 	return select_id
 
@@ -41,7 +45,6 @@ def get_exercise():
 		exercise_name=exercise_data[i]['name']
 		exercise_slug=exercise_data[i]['slug']
 		slug_replace=exercise_slug.replace("/","_")
-		parent_exercise=exercise_data[i]['parentExerciseId']
 		child_exercise=exercise_data[i]['childExercises']
 		print(i+1,exercise_name)
 		slug.append(exercise_slug)
@@ -59,28 +62,52 @@ def store_exe_data():
 	for i in range(len(slug)):
 		slug_url=request(f"{saral_url}/{exercises_id}/exercise/getBySlug?slug={slug[i]}",slug_store+"/"+again_slug[i])
 
+def content():
+	var=0
+	while True:
+		content=read_file(f"{slug_store}/{again_slug[var]}.json")
+		store_content=content['content']
+		print(store_content)
+		space()
+		user_in=input("Enter 'n' to go to next exercise or 'p' to go to previous exercise or to exit press 'x' key : ")
+		if user_in=="x" or user_in== "X":
+			exit()
+		if user_in=='p' or user_in== "P":
+			if var>0:
+				var-=1
+			else:
+				print("There is no previous exercise content!")
+				if var==0:
+					user_inp=input("""If you want to exit:- press "x" if u want to read continue press "any" key...""")
+					if user_inp=="x":
+						exit()
+		elif user_in=='n' or user_in=="N":
+			var+=1
+
 if os.path.exists("./courses.json"):
 	saral_courses()
 	exercises_id=select_course()
-	# print("a-jai")
-
 	exercise_path=(f"request_data/Courses_Exercise/exercise_{exercises_id}")
+
 	if os.path.exists(f"{exercise_path}.json"):
 		get_exercise()
-
 		slug_store=(f"request_data/Exercise_slug/exercise_{exercises_id}")
+
 		if os.path.isdir(slug_store):
-			pass
+			content()
 		else:
 			os.mkdir(slug_store)
-			store_exe_content()
+			store_exe_data()
+			content()		
 	else:
 		request(f"{saral_url}/{exercises_id}/exercises",exercise_path)
 		get_exercise()
 		slug_store=(f"request_data/Exercise_slug/exercise_{exercises_id}")
 		os.mkdir(slug_store)
-		a = store_exe_content()	
+		store_exe_data()
+		content()
 else:
+	#This code run only one time when you have no any offline data
 	request(saral_url,"courses")
 	saral_courses()
 	exercises_id=select_course()
@@ -89,4 +116,5 @@ else:
 	get_exercise()
 	slug_store=(f"request_data/Exercise_slug/exercise_{exercises_id}")
 	os.mkdir(slug_store)
-	store_exe_content()
+	store_exe_data()
+	content()
