@@ -76,10 +76,8 @@ while True:
 				pass
 			else:
 				os.mkdir(slug_store)
-				# store_exe_content()
-				for i in range(len(slug)):
-					slug_url=request(f"{saral_url}/{exercises_id}/exercise/getBySlug?slug={slug[i]}",slug_store+"/"+again_slug[i])
-					print("q-jai")
+				store_exe_content()
+				print("q-jai")
 
 		else:
 			request(f"{saral_url}/{exercises_id}/exercises",exercise_path)
