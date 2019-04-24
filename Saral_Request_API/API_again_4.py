@@ -8,7 +8,8 @@ def request(url,f_write):
 	with open(f"{f_write}.json","wb") as file:
 		file.write(response.content)
 	return response.json()
-	
+
+#Here we are creating empty list for stroring courses exercise ID
 course_id_list=[]
 
 def read_file(f_read):
@@ -51,7 +52,8 @@ def read_exercise():
 			print("\t*"+str(chile_exercise_name))
 			slug.append(chile_exercise_slug)
 
-
+#The most common way to check for the existence of a file in Python is using the  
+#exists() and isfile() methods from the os.path module in the standard library.
 if os.path.exists("./courses.json"):
 	courses()
 	exercises_id=select_course()
@@ -60,9 +62,9 @@ if os.path.exists("./courses.json"):
 	if os.path.exists(f"{exercise_path}.json"):
 		read_exercise()
 	else:
-		request(f"{saral_url}/{exercises_id}/exercises",exercise_path)
-		read_exercise()
+		request(f"{saral_url}/{exercises_id}/exercises",exercise_path) #make a new URL for retrive the data from the Server
+		read_exercise() # through this function we fetch the data from API such as (parentExercise, childExercise, course slug etc)
 else:
 	request(saral_url,"courses")
-	courses()
+	courses() #
 	select_course()
