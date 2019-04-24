@@ -1,10 +1,17 @@
 import requests
+
+#The JSON module is mainly used to convert the python dictionary above into a JSON string that can be written into a file.
+#While the JSON module will convert strings to Python datatypes,
+#normally the JSON functions are used to read and write directly from JSON files.A
 import json
-import os
+
+import os #The OS module in python provides functions for interacting with the operating system.
 
 saral_url=("http://saral.navgurukul.org/api/courses")
 def request(url):
 	response=requests.get(url)
+	#The best way to do this is using the withstatement.
+	#This ensures that the file is closed when the block inside with is exited.
 	with open("courses.json","wb") as file:
 		file.write(response.content)
 	return response.json()
@@ -26,4 +33,3 @@ if os.path.exists("./courses.json"):
 else:
 	request(saral_url)
 	read_file()
-	print("KISH")
