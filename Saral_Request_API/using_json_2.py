@@ -13,9 +13,11 @@ def request(url):
 	#The best way to do this is using the withstatement.
 	#This ensures that the file is closed when the block inside with is exited.
 	with open("courses.json","wb") as file:
+	    # write the contents of the response (response.content) 
+	    # to a new file in binary mode. 
 		file.write(response.content)
 	return response.json()
-
+#Here we define a function for retrive the course name and ID form the server thorug give url.
 def read_file():
 	with open('courses.json',"r") as file:
 		data_read=file.read()
@@ -27,9 +29,12 @@ def read_file():
 		course_name=courses['name']
 		print(index,course_name)
 
-
+#The most common way to check for the existence of a file in Python is using the  
+#exists() and isfile() methods from the os.path module in the standard library.
 if os.path.exists("./courses.json"):
 	read_file()
-else:
+else:	
+	# calling the request() which retrive the data form the sarver
 	request(saral_url)
+	#calling the read() where I store the course name and ID
 	read_file()
