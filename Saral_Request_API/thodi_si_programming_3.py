@@ -8,7 +8,8 @@ def request(url):
 	with open("courses.json","wb") as file:
 		file.write(response.content)
 	return response.json()
-	
+
+# id_list is a varible in which a new list is assigned to store id of the courses.		
 course_id_list=[]
 
 def read_file():
