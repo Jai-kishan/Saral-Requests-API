@@ -2,7 +2,7 @@ import requests
 
 #The JSON module is mainly used to convert the python dictionary above into a JSON string that can be written into a file.
 #While the JSON module will convert strings to Python datatypes,
-#normally the JSON functions are used to read and write directly from JSON files.A
+#normally the JSON functions are used to read and write directly from JSON files.
 import json
 
 import os #The OS module in python provides functions for interacting with the operating system.
